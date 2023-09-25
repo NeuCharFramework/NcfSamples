@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.Dapr\Senparc.Xncf.Dapr.csproj" />
     <ProjectReference Include="..\DaprTestInterface\DaprTestInterface.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Dapr\Senparc.Xncf.Dapr.csproj" />
   </ItemGroup>
 
 </Project>
