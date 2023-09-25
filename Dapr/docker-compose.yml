@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "5379:6379"
+
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "-port", "50006"]
+    ports:
+      - "50006:50006"
+
+  daprclienttest:
+    image: ${DOCKER_REGISTRY-}daprclienttest
+    build:
+      dockerfile: DaprClientTest/Dockerfile
+    depends_on: 
+      - redis
+      - placement
+
+  daprclienttest-dapr:
+    image: "daprio/daprd:edge"
+    command: [ "./daprd", 
+      "-app-id", "testclient", 
+      "-app-port", "80",
+      "-components-path", "/components"
+      ]
+    volumes:
+      - "./dapr/components/:/components"
+    network_mode: "service:daprclienttest"
+    depends_on:
+      - daprclienttest
+
+  daprservertest:
+    image: ${DOCKER_REGISTRY-}daprservertest
+    build:
+      context: .
+      dockerfile: DaprServerTest/Dockerfile
+
+  daprservertest-dapr:
+    image: "daprio/daprd:edge"
+    command: [ "./daprd", 
+      "-app-id", "testserver", 
+      "-app-port", "5016",
+      "--resources-path", "./dapr/components"
+      ]
+    network_mode: "service:daprservertest"
+    depends_on:
+      - daprservertest
+
