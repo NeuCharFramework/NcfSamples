@@ -25,7 +25,7 @@ services:
     command: [ "./daprd", 
       "-app-id", "testclient", 
       "-app-port", "80",
-      "-components-path", "/components"
+      "--resources-path", "/components"
       ]
     volumes:
       - "./dapr/components/:/components"
@@ -44,8 +44,10 @@ services:
     command: [ "./daprd", 
       "-app-id", "testserver", 
       "-app-port", "5016",
-      "--resources-path", "./dapr/components"
+      "--resources-path", "/components"
       ]
+    volumes:
+      - "./dapr/components/:/components"
     network_mode: "service:daprservertest"
     depends_on:
       - daprservertest
